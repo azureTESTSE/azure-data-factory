@@ -13,7 +13,7 @@
 				"fileName": "cc.csv",
 				"container": "finance"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": ";",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
