@@ -1,0 +1,9 @@
+{
+	"name": "astnerfinance",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "60faa66b-7002-4b83-b86d-4b09d57eab91",
+		"tenantId": "4973f1da-aed4-45f8-b973-25053bee00b6"
+	}
+}
