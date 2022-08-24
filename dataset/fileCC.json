@@ -1,5 +1,5 @@
 {
-	"name": "dsCC",
+	"name": "fileCC",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "financeBlobs",
