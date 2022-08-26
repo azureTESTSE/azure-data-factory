@@ -5,7 +5,14 @@
 			{
 				"name": "copyAccount",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "truncateTable",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -166,12 +173,44 @@
 				"typeProperties": {
 					"scripts": [
 						{
-							"parameters": {
-								"value": "@variables('lastChangedDate')",
-								"type": "Expression"
-							},
+							"parameters": [
+								{
+									"name": "@modifiedDate",
+									"type": "String",
+									"value": {
+										"value": "@variables('lastChangedDate')",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
 							"type": "NonQuery",
-							"text": "update dbo.account set category = ?"
+							"text": "update dbo.account set category=@modifiedDate"
+						}
+					]
+				}
+			},
+			{
+				"name": "truncateTable",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "financeDW",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "truncate table dbo.account"
 						}
 					]
 				}
