@@ -183,7 +183,10 @@
 								{
 									"name": "key",
 									"type": "String",
-									"value": "account",
+									"value": {
+										"value": "@variables('keyName')",
+										"type": "Expression"
+									},
 									"direction": "Input"
 								}
 							],
@@ -197,6 +200,10 @@
 		"variables": {
 			"incDate": {
 				"type": "String"
+			},
+			"keyName": {
+				"type": "String",
+				"defaultValue": "account"
 			}
 		},
 		"annotations": []
