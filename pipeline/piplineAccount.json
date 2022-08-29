@@ -40,35 +40,22 @@
 								}
 							],
 							"type": "Query",
-							"text": "select  @value=value from dbo.inc where datakey=@key"
+							"text": "select @value=value from dbo.inc where datakey=@key"
 						}
 					]
 				}
 			},
 			{
-				"name": "SetIncDate",
-				"type": "SetVariable",
+				"name": "truncate",
+				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "GetIncDate",
+						"activity": "Set variable1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "incDate",
-					"value": {
-						"value": "@string(activity('GetIncDate').output)\n",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "truncate",
-				"type": "Script",
-				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -94,12 +81,6 @@
 				"name": "copyData",
 				"type": "Copy",
 				"dependsOn": [
-					{
-						"activity": "SetIncDate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
 					{
 						"activity": "truncate",
 						"dependencyConditions": [
@@ -135,6 +116,32 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "account",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "account_key",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "name",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -189,6 +196,69 @@
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings"
 					}
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetIncDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "incDate",
+					"value": {
+						"value": "@activity('GetIncDate').output.outputParameters.value",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "updInc",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "GetMeta",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "financeDW",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "dt",
+									"type": "String",
+									"value": {
+										"value": "@activity('GetMeta').output.lastModified",
+										"type": "Expression"
+									},
+									"direction": "Input"
+								}
+							],
+							"type": "Query",
+							"text": "update inc set value=@dt"
+						}
+					]
 				}
 			}
 		],
