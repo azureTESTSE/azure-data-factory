@@ -131,14 +131,7 @@
 			{
 				"name": "truncateTable",
 				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "GetIncDate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -201,6 +194,26 @@
 							"text": "select  @value=value from dbo.inc where datakey=@key"
 						}
 					]
+				}
+			},
+			{
+				"name": "SetIncDate",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "GetIncDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "incDate",
+					"value": {
+						"value": "@activity('GetIncDate').output",
+						"type": "Expression"
+					}
 				}
 			}
 		],
