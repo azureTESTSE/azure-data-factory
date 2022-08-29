@@ -192,7 +192,7 @@
 								{
 									"name": "value",
 									"type": "String",
-									"value": "",
+									"value": null,
 									"direction": "Output",
 									"size": "50"
 								}
