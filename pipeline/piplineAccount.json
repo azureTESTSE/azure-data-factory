@@ -129,69 +129,6 @@
 				}
 			},
 			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Get LastModified",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "lastChangedDate",
-					"value": {
-						"value": "@activity('Get LastModified').output.lastModified",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "Update SQL",
-				"type": "Script",
-				"dependsOn": [
-					{
-						"activity": "Set variable1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "financeDW",
-					"type": "LinkedServiceReference"
-				},
-				"typeProperties": {
-					"scripts": [
-						{
-							"parameters": [
-								{
-									"name": "@date",
-									"type": "String",
-									"value": {
-										"value": "@variables('lastChangedDate')",
-										"type": "Expression"
-									},
-									"direction": "Input"
-								}
-							],
-							"type": "NonQuery",
-							"text": "update dbo.account set category = @date"
-						}
-					]
-				}
-			},
-			{
 				"name": "truncateTable",
 				"type": "Script",
 				"dependsOn": [],
