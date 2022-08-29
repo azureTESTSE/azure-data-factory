@@ -131,7 +131,14 @@
 			{
 				"name": "truncateTable",
 				"type": "Script",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "GetIncDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -152,10 +159,43 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "GetIncDate",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "financeDW",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "key",
+									"type": "String",
+									"value": "account",
+									"direction": "Input"
+								}
+							],
+							"type": "Query",
+							"text": "select value from dbo.inc where datakey=@account"
+						}
+					]
+				}
 			}
 		],
 		"variables": {
-			"lastChangedDate": {
+			"incDate": {
 				"type": "String"
 			}
 		},
