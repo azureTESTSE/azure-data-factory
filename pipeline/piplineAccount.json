@@ -188,10 +188,17 @@
 										"type": "Expression"
 									},
 									"direction": "Input"
+								},
+								{
+									"name": "value",
+									"type": "String",
+									"value": "",
+									"direction": "Output",
+									"size": "50"
 								}
 							],
 							"type": "Query",
-							"text": "select value from dbo.inc where datakey=@key"
+							"text": "select  @value=value from dbo.inc where datakey=@key"
 						}
 					]
 				}
