@@ -188,7 +188,7 @@
 								}
 							],
 							"type": "Query",
-							"text": "select value from dbo.inc where datakey=@account"
+							"text": "select value from dbo.inc where datakey=@key"
 						}
 					]
 				}
