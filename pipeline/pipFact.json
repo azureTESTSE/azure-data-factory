@@ -1,6 +1,85 @@
 {
 	"name": "pipFact",
 	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": []
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "GetDate",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "GetDate",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "financeDW",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"parameters": [
+								{
+									"name": "key",
+									"type": "String",
+									"value": "fact",
+									"direction": "Input"
+								},
+								{
+									"name": "value",
+									"type": "Datetime",
+									"value": null,
+									"direction": "Output"
+								}
+							],
+							"type": "Query",
+							"text": "select @value=value from dbo.inc \nwhere datakey=@key "
+						}
+					]
+				}
+			}
+		],
+		"variables": {
+			"lastDate": {
+				"type": "String"
+			}
+		},
 		"annotations": []
 	}
 }
