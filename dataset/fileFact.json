@@ -1,0 +1,41 @@
+{
+	"name": "fileFact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "financeBlobs",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "fact.csv",
+				"folderPath": "fact",
+				"container": "finance"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "cc",
+				"type": "String"
+			},
+			{
+				"name": "account",
+				"type": "String"
+			},
+			{
+				"name": "amount",
+				"type": "String"
+			},
+			{
+				"name": "currency",
+				"type": "String"
+			}
+		]
+	}
+}
