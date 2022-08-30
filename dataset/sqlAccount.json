@@ -1,0 +1,30 @@
+{
+	"name": "sqlAccount",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "financeDW",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "account_key",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "name",
+				"type": "varchar"
+			},
+			{
+				"name": "category",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "account"
+		}
+	}
+}
