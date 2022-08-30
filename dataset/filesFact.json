@@ -1,0 +1,22 @@
+{
+	"name": "filesFact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "financeBlobs",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "fact",
+				"container": "finance"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
