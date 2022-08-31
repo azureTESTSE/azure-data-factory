@@ -3,42 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Metadata1",
-				"type": "GetMetadata",
-				"dependsOn": [
-					{
-						"activity": "GetDate",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "filesFact",
-						"type": "DatasetReference"
-					},
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
-					}
-				}
-			},
-			{
 				"name": "GetDate",
 				"type": "Script",
 				"dependsOn": [],
@@ -78,38 +42,125 @@
 				}
 			},
 			{
-				"name": "ForEach1",
-				"type": "ForEach",
+				"name": "copyFact_copy1",
+				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Get Metadata1",
+						"activity": "GetDate",
 						"dependencyConditions": [
 							"Succeeded"
 						]
 					}
 				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
 				"userProperties": [],
 				"typeProperties": {
-					"items": {
-						"value": "@activity('Get Metadata1').output.childItems",
-						"type": "Expression"
-					},
-					"activities": [
-						{
-							"name": "Wait1",
-							"type": "Wait",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"waitTimeInSeconds": 1
-							}
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"modifiedDatetimeStart": "2022-08-30T00:00:00.989Z",
+							"wildcardFolderPath": "fact",
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
 						}
-					]
-				}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "cc",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cc_key",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "account",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "account_key",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "amount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "amount",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 3,
+									"precision": 18
+								}
+							},
+							{
+								"source": {
+									"name": "currency",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "currency",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "filesFact",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sqlFact",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"variables": {
 			"lastDate": {
+				"type": "String"
+			},
+			"test": {
 				"type": "String"
 			}
 		},
